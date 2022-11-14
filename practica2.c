@@ -33,14 +33,14 @@ for( i = 0; i < N; i++ ){
 
 void PrintVect( float vect[N], int from, int numel ){
 	for(int i=from; i<numel; i++ )
-		printf("%f\n",vect[i]);
+		printf("Mostrar vector: %f\n",vect[i]);
 }
 
 // 2. Mostrar un cert nombre d'elements d'una fila d'una matriu.
 
 void PrintRow( float Mat[N][N], int row, int from, int numel ){
 	for (int j=from; j<numel; j++)
-		printf("%f\n",Mat[row][j]);
+		printf("Mostrar matriu: %f\n",Mat[row][j]);
 }
 
 // 3. Calcular la multiplicació d'un escalar d’un vector per una constant consisteix en multiplicar tots els elements d’un vector per una constant.
@@ -49,7 +49,7 @@ void PrintRow( float Mat[N][N], int row, int from, int numel ){
 void MultEscalar( float vect[N], float vectres[N], float alfa ){
 	for (int i=0; i<N; i++){
 		vectres[i]=vect[i]*alfa;
-		printf("%f\n",vectres[i]);
+		printf("Mostrar vector multiplicat: %f\n",vectres[i]);
 	}
 }
 
@@ -67,17 +67,11 @@ float Scalar( float vect1[N], float vect2[N] ){
 // 5. Calcular la longitud d'un vector.
 
 float Magnitude( float vect[N] ){
-	float arrel=0;
+	float arrel;
 	float longitud;
-	for (int i=0; i<N; i++){
-		double vect[i];
-		double potencia=2;
-		double  elevat = pow(vect[i],potencia);
-		printf("La potència és %d\n",elevat);
-		arrel+=elevat;
-	}
+	arrel =  Scalar(vect,vect);
 	longitud = sqrt(arrel);
-	printf("%f\n",longitud);
+	printf("La longitud és %f\n",longitud);
 	return longitud;
 }
 
@@ -98,20 +92,106 @@ void Projection( float vect1[N], float vect2[N], float vectres[N] ){
 	float divisio = numerador / denominador;
 	for ( int i = 0; i<N; i++){
 		vectres[i]= divisio * vect2[i];
+		printf("La projecció és %f\n",vectres[i]);
 	}
 }
 
 // 8. Calcular la Infini-norma d’una matriu.
 
 float Infininorm( float M[N][N] ){
+	float valor;
+	float suma;
+	float max = 0.0;
+	for (int i = 0; i<N; i++){
+		suma = 0.0;
+		for (int j = 0; j<N; j++){
+			if (M[i][j]<0){
+				valor = -(M[i][j]);}
+			else{
+				valor = M[i][j];}
+			suma+=valor;
+		}
+		if (suma>max){
+			max=suma;}
+	}
+	printf("La Infi-norma és %f\n",max);
+	return max;
+}
 
+// 9. Calcular la norma-ú d’una matriu.
+
+float Onenorm( float M[N][N] ){
+        float valor;
+        float suma;
+        float max = 0.0;
+        for (int j = 0; j<N; j++){
+                suma = 0.0;
+                for (int i = 0; i<N; i++){
+                        if (M[i][j]<0){
+                                valor = -(M[i][j]);}
+                        else{
+                                valor = M[i][j];}
+                        suma+=valor;
+                }
+                if (suma>max){
+                        max=suma;}
+        }
+        printf("La norma-ú és %f\n",max);
+        return max;
+}
+
+//10. Calcular la norma de Frobenius d’una matriu.
+
+float NormFrobenius( float M[N][N] ){
+	float suma = 0.0;
+	float quadrat;
+	for (int i=0; i<N; i++){
+		for (int j=0; j<N; j++){
+			quadrat = M[i][j]*M[i][j];
+			suma+=quadrat;
+		}
+	}
+	float frobenius = sqrt(suma);
+	printf("La norma de Frobenius és %f\n",frobenius);
+	return frobenius;
+}
+
+//11. Determinar si una matriu és o no Diagonal Dominant.
+
+int DiagonalDom( float M[N][N] ){
+	float suma = 0.0;
+	float valor;
+	int elements = 0;
+	int diag = 0;
+	for (int i=0; i<N; i++){
+		valor=0.0;
+		for (int j=0; j<N; j++){
+			if (i==j){
+				valor = M[i][j];
+				elements+=1;}
+			else{
+				suma+= M[i][j];}
+		}
+		if (valor>suma){
+			diag+=1;}
+	}
+	if (elements==diag){
+		return 1;}
+	else{
+		return 0;}
+}
 
 int main(){
 	InitData();
 	PrintVect(V1,2,6);
 	PrintRow(Mat,4,4,7);
 	MultEscalar(V1,V3,4.3);
-	float prod_escalar=Scalar(V1,V2);
-	float longitud=Magnitude(V1);
+	float Prod_escalar=Scalar(V1,V2);
+	float Longitud=Magnitude(V1);
 	Projection(V1,V2,V3);
+	float Infini_norma = Infininorm(Mat);
+	float Norma_u = Onenorm(Mat);
+	float Frobenius = NormFrobenius(Mat);
+	int Diag_dominant = DiagonalDom(Mat);
+	printf("%d\n",Diag_dominant);
 }
