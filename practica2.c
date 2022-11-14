@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#define N 8
+#define N 512
 
 float Mat[N][N];
 float MatDD[N][N];
@@ -61,24 +61,25 @@ float Scalar( float vect1[N], float vect2[N] ){
 		float multiplicacio = vect1[i]*vect2[i];
 		res+=multiplicacio;
 	}
+	printf("Resultat: %f\n",res);
 	return res;
 }
 
 // 5. Calcular la longitud d'un vector.
 
-float Magnitude( float vect[N] ){
-	float arrel;
-	float longitud;
-	arrel =  Scalar(vect,vect);
-	longitud = sqrt(arrel);
-	printf("La longitud és %f\n",longitud);
+double  Magnitude( float vect[N] ){
+	double longitud;
+	float  arrel =  Scalar(vect,vect);
+	double arrel_d = arrel;
+	longitud = sqrt(arrel_d);
 	return longitud;
 }
 
 // 6. Determinar si dos vectors són ortogonals. Dos vectors són ortogonals si l’angle entre ells és recte. El producte escalar ha de ser 0.
 
-int Ortogonal( float vect[N] ){
-	if (Scalar(vect,V2)==0){
+int Ortogonal( float vect1[N],float vect2[N] ){
+	float zero =0.0;
+	if (Scalar(vect1,vect2)==zero){
 		return 1;}
 	else{
 		return 0;}
@@ -92,7 +93,6 @@ void Projection( float vect1[N], float vect2[N], float vectres[N] ){
 	float divisio = numerador / denominador;
 	for ( int i = 0; i<N; i++){
 		vectres[i]= divisio * vect2[i];
-		printf("La projecció és %f\n",vectres[i]);
 	}
 }
 
@@ -114,7 +114,6 @@ float Infininorm( float M[N][N] ){
 		if (suma>max){
 			max=suma;}
 	}
-	printf("La Infi-norma és %f\n",max);
 	return max;
 }
 
@@ -136,7 +135,6 @@ float Onenorm( float M[N][N] ){
                 if (suma>max){
                         max=suma;}
         }
-        printf("La norma-ú és %f\n",max);
         return max;
 }
 
@@ -152,7 +150,6 @@ float NormFrobenius( float M[N][N] ){
 		}
 	}
 	float frobenius = sqrt(suma);
-	printf("La norma de Frobenius és %f\n",frobenius);
 	return frobenius;
 }
 
@@ -181,17 +178,113 @@ int DiagonalDom( float M[N][N] ){
 		return 0;}
 }
 
+// Funció main
+
 int main(){
-	InitData();
-	PrintVect(V1,2,6);
-	PrintRow(Mat,4,4,7);
-	MultEscalar(V1,V3,4.3);
-	float Prod_escalar=Scalar(V1,V2);
-	float Longitud=Magnitude(V1);
-	Projection(V1,V2,V3);
+
+	//A.--------------------------------------------------------------
+	 InitData();
+	//a. Els elements 0 al 9 i 256 al 265 dels vectors V1, V2 i V3.
+	int numel=9;
+	int from1=0;
+	int from2=256;
+	//Vector 1
+	PrintVect(V1,from1,numel);
+	PrintVect(V1,from2,numel);
+	//Vector 2
+	PrintVect(V1,from1,numel);
+        PrintVect(V1,from2,numel);
+	//Vector 3
+	PrintVect(V1,from1,numel);
+        PrintVect(V1,from2,numel);
+	//b. Els elements 0 al 9 de les files 0 i 100 de la matriu Mat.
+	PrintRow(Mat,0,0,9);
+	PrintRow(Mat,100,0,9);
+	//c. Els elements 0 al 9 de la fila 0 i 90 a 99 de la fila 100 de la matriu MatDD.
+	PrintRow(MatDD,0,0,9);
+        PrintRow(MatDD,100,90,9);
+
+	//B.-------------------------------------------------------------
+	//Mat
+	printf("\nMatriu Mat\n");
+	//a.La seva Infini-norma
 	float Infini_norma = Infininorm(Mat);
+	printf("La infini-norma de la matriu Mat és %f\n",Infini_norma);
+	//b. La seva norma ú
 	float Norma_u = Onenorm(Mat);
+	printf("La norma ú de la matriu Mat és %f\n",Norma_u);
+	//c. La seva norma de Frobenius
 	float Frobenius = NormFrobenius(Mat);
+	printf("La norma de Frobenius de la matriu Mat és %f\n",Frobenius);
+	//d. Si la matriu és o no diagonal dominant
 	int Diag_dominant = DiagonalDom(Mat);
-	printf("%d\n",Diag_dominant);
+	if (Diag_dominant==1){
+		printf("La matriu Mat és diagonal dominant\n");}
+	else{
+		printf("La matriu Mat no és diagonal dominant\n");}
+
+        //MatDD
+	printf("\nMatriu MatDD\n");
+        //a.La seva Infini-norma
+        float Infini_normaDD = Infininorm(MatDD);
+        printf("La infini-norma de la matriu MatDD és %f\n",Infini_normaDD);
+        //b. La seva norma ú
+        float Norma_uDD = Onenorm(MatDD);
+        printf("La norma ú de la matriu MatDD és %f\n",Norma_uDD);
+        //c. La seva norma de Frobenius
+        float FrobeniusDD = NormFrobenius(MatDD);
+        printf("La norma de Frobenius de la matriu MatDD és %f\n",FrobeniusDD);
+        //d. Si la matriu és o no diagonal dominant
+        int Diag_dominantDD = DiagonalDom(MatDD);
+        if (Diag_dominantDD==1){
+                printf("La matriu MatDD és diagonal dominant\n");}
+        else{
+                printf("La matriu MatDD no és diagonal dominant\n\n");}
+
+	//C.-----------------------------------------------------------------
+	//a. V1·V2
+	float Pe12=Scalar(V1,V2);
+        printf("Producte escalar V1 i V2 és %f\n", Pe12);
+	//n. V1·V3
+        float Pe13=Scalar(V1,V3);
+        printf("Producte escalar V1 i V3 és %f\n", Pe13);
+	//c. V2·V3
+	float Pe23=Scalar(V2,V3);
+        printf("Producte escalar V2 i V3 és %f\n\n", Pe23);
+
+	//D.----------------------------------------------------------------
+	//V1
+	double  magnitud1 = Magnitude(V1);
+	printf("La magnitud del vector V1 és %f\n",magnitud1);
+        //V2
+        double  magnitud2 = Magnitude(V2);
+        printf("La magnitud del vector V2 és %f\n",magnitud2);
+        //V3
+        double  magnitud3 = Magnitude(V3);
+        printf("La magnitud del vector V3 és %f\n\n",magnitud3);
+
+	//E.------------------------------------------------------------
+	//V1 i V2
+        int ortogonal12 = Ortogonal(V1,V2);
+        if (ortogonal12 ==1){
+                printf("Els vectors V1 i V2 són ortogonals.\n");}
+        else{
+                printf("Els vectors V1 i V2 no són ortogonals.\n");}
+	//V1 i V3
+        int ortogonal13 = Ortogonal(V1,V3);
+        if (ortogonal13 ==1){
+                printf("Els vectors V1 i V3 són ortogonals.\n");}
+        else{
+                printf("Els vectors V1 i V3 no són ortogonals.\n");}
+
+	//V2 i V3
+        int ortogonal23 = Ortogonal(V2,V3);
+        if (ortogonal23 ==1){
+                printf("Els vectors V2 i V3 són ortogonals.\n");}
+        else{
+                printf("Els vectors V2 i V3 no són ortogonals\n\n.");}
+
+	//F.------------------------------------------------------------
+
 }
+
