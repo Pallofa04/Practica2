@@ -282,9 +282,25 @@ int main(){
         if (ortogonal23 ==1){
                 printf("Els vectors V2 i V3 són ortogonals.\n");}
         else{
-                printf("Els vectors V2 i V3 no són ortogonals\n\n.");}
+                printf("Els vectors V2 i V3 no són ortogonals.\n\n");}
 
 	//F.------------------------------------------------------------
+	float vectres[N];
+	MultEscalar(V2,vectres,2.0);
+	PrintVect(vectres,0,9);
+	PrintVect(vectres,256,9);
+
+	//G.-----------------------------------------------------------
+	//V2 sobre V3
+	printf("\nProjecció V2 sobre V3\n");
+	float project23[N];
+	Projection(V2,V3,project23);
+	PrintVect(project23,0,9);
+	//V2 sobre V3
+        printf("Projecció V1 sobre V2\n");
+        float project12[N];
+        Projection(V1,V2,project12);
+        PrintVect(project12,0,9);
 
 }
 
